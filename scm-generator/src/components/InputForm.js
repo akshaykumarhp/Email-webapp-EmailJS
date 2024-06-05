@@ -6,6 +6,7 @@ const InputForm = () => {
     const [input2, setInput2] = useState('');
     const [input3, setInput3] = useState('');
     const [output, setOutput] = useState(null);
+    const [message, setMessage] = useState('');
 
     const handleSubmit = () => {
         const jsonOutput = {
@@ -14,6 +15,7 @@ const InputForm = () => {
             "Input 3": input3
         };
         setOutput(JSON.stringify(jsonOutput, null, 2));
+        setMessage('Values submitted successfully');
     };
 
     const handleClear = () => {
@@ -21,6 +23,7 @@ const InputForm = () => {
         setInput2('');
         setInput3('');
         setOutput(null);
+        setMessage('Values cleared successfully');
     };
 
     return (
@@ -50,6 +53,7 @@ const InputForm = () => {
                 <button onClick={handleSubmit}>Submit</button>
                 <button onClick={handleClear}>Clear</button>
             </div>
+            {message && <div className='message'>{message}</div>}
             <div id="output">
                 <h2>Output:</h2>
                 <pre>{output}</pre>
