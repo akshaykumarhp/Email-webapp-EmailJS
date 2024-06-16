@@ -2,51 +2,68 @@ import React, { useState } from 'react';
 import './InputForm.css'
 
 const InputForm = () => {
-    const [input1, setInput1] = useState('');
-    const [input2, setInput2] = useState('');
-    const [input3, setInput3] = useState('');
-    const [output, setOutput] = useState(null);
+    const [text, setText] = useState('');
+    const [subject, setSubject] = useState('');
+    const [to, setTo] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleSubmit = () => {
-        const jsonOutput = {
-            "Input 1": input1,
-            "Input 2": input2,
-            "Input 3": input3
+    const handleSubmit = async () => {
+        const emailData = {
+            text,
+            subject,
+            to,
         };
-        setOutput(JSON.stringify(jsonOutput, null, 2));
-        setMessage('Values submitted successfully');
+
+        try {
+            const response = await fetch('https://portal.ischool-iot.net/api/messaging/sendemail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-KEY': '122c052528eff50bb1d6bb6f',
+                },
+                body: JSON.stringify(emailData),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                setMessage(result.message || 'Email sent successfully');
+            } else {
+                setMessage('Failed to send email');
+            } 
+        } catch (error) {
+            console.error('Error sending email: ', error);
+            setMessage('Failed to send email');
+        }
     };
 
     const handleClear = () => {
-        setInput1('');
-        setInput2('');
-        setInput3('');
-        setOutput(null);
-        setMessage('Values cleared successfully');
+        setText('');
+        setSubject('');
+        setTo('');
+        setMessage('');
     };
 
     return (
         <div className="container">
-            <h1>SCM Generator</h1>
+            <h1>Email Sender API test</h1>
             <div className="input-container">
                 <input
                     type="text"
-                    value={input1}
-                    onChange={(e) => setInput1(e.target.value)}
-                    placeholder="Input 1"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Email Text"
                 />
                 <input
                     type="text"
-                    value={input2}
-                    onChange={(e) => setInput2(e.target.value)}
-                    placeholder="Input 2"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="Email Subject"
                 />
                 <input
-                    type="text"
-                    value={input3}
-                    onChange={(e) => setInput3(e.target.value)}
-                    placeholder="Input 3"
+                    type="email"
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                    placeholder="Recipent Email"
                 />
             </div>
             <div className="button-container">
@@ -54,10 +71,6 @@ const InputForm = () => {
                 <button onClick={handleClear}>Clear</button>
             </div>
             {message && <div className='message'>{message}</div>}
-            <div id="output">
-                <h2>Output:</h2>
-                <pre>{output}</pre>
-            </div>
         </div>
     );
 };
