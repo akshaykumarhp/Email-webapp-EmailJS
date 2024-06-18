@@ -50,7 +50,7 @@ const InputForm = () => {
 
     return (
         <div className="container">
-            <h1>SCM Generator</h1>
+            <h1>SCM Email Sender</h1>
             <form onSubmit={handleSubmit}>
                 <div className="input-container">
                     <input
