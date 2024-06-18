@@ -1,63 +1,88 @@
 import React, { useState } from 'react';
-import './InputForm.css'
+import emailjs from 'emailjs-com';
+import './InputForm.css';
 
 const InputForm = () => {
-    const [input1, setInput1] = useState('');
-    const [input2, setInput2] = useState('');
-    const [input3, setInput3] = useState('');
-    const [output, setOutput] = useState(null);
+    const [formData, setFormData] = useState({
+        to: '',
+        subject: '',
+        text: '',
+    });
     const [message, setMessage] = useState('');
 
-    const handleSubmit = () => {
-        const jsonOutput = {
-            "Input 1": input1,
-            "Input 2": input2,
-            "Input 3": input3
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const serviceID = 'service_zc9hmky';
+        const templateID = 'template_k6ksljz';
+        const userID = 'iQ_7O7JQD9ygxqE58';
+
+        const templateParams = {
+            to_email: formData.to,
+            subject: formData.subject,
+            message: formData.text,
         };
-        setOutput(JSON.stringify(jsonOutput, null, 2));
-        setMessage('Values submitted successfully');
+
+        emailjs.send(serviceID, templateID, templateParams, userID)
+            .then((response) => {
+                console.log('Email sent successfully!', response.status, response.text);
+                setMessage('Email sent successfully!');
+            })
+            .catch((error) => {
+                console.error('Failed to send email.', error);
+                setMessage('Failed to send email.');
+            });
     };
 
     const handleClear = () => {
-        setInput1('');
-        setInput2('');
-        setInput3('');
-        setOutput(null);
+        setFormData({
+            to: '',
+            subject: '',
+            text: '',
+        });
         setMessage('Values cleared successfully');
     };
 
     return (
         <div className="container">
             <h1>SCM Generator</h1>
-            <div className="input-container">
-                <input
-                    type="text"
-                    value={input1}
-                    onChange={(e) => setInput1(e.target.value)}
-                    placeholder="Input 1"
-                />
-                <input
-                    type="text"
-                    value={input2}
-                    onChange={(e) => setInput2(e.target.value)}
-                    placeholder="Input 2"
-                />
-                <input
-                    type="text"
-                    value={input3}
-                    onChange={(e) => setInput3(e.target.value)}
-                    placeholder="Input 3"
-                />
-            </div>
-            <div className="button-container">
-                <button onClick={handleSubmit}>Submit</button>
-                <button onClick={handleClear}>Clear</button>
-            </div>
+            <form onSubmit={handleSubmit}>
+                <div className="input-container">
+                    <input
+                        type="email"
+                        name="to"
+                        value={formData.to}
+                        onChange={handleChange}
+                        placeholder="To"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        placeholder="Subject"
+                        required
+                    />
+                    <textarea
+                        name="text"
+                        value={formData.text}
+                        onChange={handleChange}
+                        placeholder="Text"
+                        required
+                    />
+                </div>
+                <div className="button-container">
+                    <button type="submit">Send Email</button>
+                    <button type="button" onClick={handleClear}>Clear</button>
+                </div>
+            </form>
             {message && <div className='message'>{message}</div>}
-            <div id="output">
-                <h2>Output:</h2>
-                <pre>{output}</pre>
-            </div>
         </div>
     );
 };

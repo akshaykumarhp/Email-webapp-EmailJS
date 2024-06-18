@@ -22,7 +22,7 @@ body {
     margin-bottom: 30px;
 }
 
-input {
+input, textarea {
     display: block;
     margin: 20px auto;
     padding: 15px;
@@ -32,11 +32,9 @@ input {
     font-size: 16px;
 }
 
-label {
-    display: block;
-    margin-top: 20px;
-    color: #fff;
-    font-size: 18px;
+textarea {
+    resize: vertical;
+    height: 100px;
 }
 
 button {
@@ -46,10 +44,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-}
-
-button:hover {
-    opacity: 0.8
+    opacity: 0.8;
 }
 
 .message {
@@ -57,17 +52,4 @@ button:hover {
     color: #fff;
     font-weight: bold;
     font-size: 18px;
-}
-
-#output {
-    margin-top: 30px;
-}
-
-pre {
-    background-color: #fff;
-    color: #000;
-    padding: 15px;
-    border-radius: 5px;
-    text-align: left;
-    font-size: 16px;
 }
